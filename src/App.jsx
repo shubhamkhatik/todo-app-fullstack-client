@@ -1,41 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Route, Routes } from "react-router";
+import Store from "./store/store";
+import { Provider } from "react-redux";
+import Task from "./components/Task";
+import Taskinfo from "./components/Taskinfo";
+import Body from "./components/Body";
+import Login from "./components/login";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <h1 class="text-3xl font-bold underline blue-500">
-        <span className="text-blue-500">Hello </span>
-        <span className="text-red-500">world!</span>
-        <span className="text-green-500">Hello </span>
-    Hello world!
-  </h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Provider store={Store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Body />}>
+            <Route path="/" element={<Task />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/task/:id" element={<Taskinfo />} />
+          </Route>
+          <Route path="*" element={<div>Page not found! 404</div>} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
+  );
 }
 
-export default App
+export default App;
