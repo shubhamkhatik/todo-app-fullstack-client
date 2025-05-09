@@ -58,7 +58,7 @@ const Task = () => {
             setEditTask(null);
             setShowModal(true);
           }}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
+          className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-700 transition duration-200"
         >
           + Create Task
         </button>
@@ -93,11 +93,11 @@ const Task = () => {
       {/* Task List */}
       <div className="grid gap-4">
         {task.map((task) => (
-          <div key={task._id} className="border p-4 rounded shadow">
+          <Link to={`/task/${task._id}`} key={task._id} className="border p-4 rounded shadow cursor-pointer hover:bg-gray-700 transition duration-200">
             <div className="flex justify-between items-center">
-              <Link to={`/task/${task._id}`} className="font-semibold">
+              <div className="font-semibold">
                 {task.name}
-              </Link>
+              </div>
               <span
                 className={`px-2 py-1 rounded text-sm ${
                   task.status === "DONE"
@@ -132,7 +132,7 @@ const Task = () => {
                 Delete
               </button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
