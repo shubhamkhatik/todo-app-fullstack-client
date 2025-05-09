@@ -93,11 +93,11 @@ const Task = () => {
       {/* Task List */}
       <div className="grid gap-4">
         {task.map((task) => (
-          <Link to={`/task/${task._id}`} key={task._id} className="border p-4 rounded shadow cursor-pointer hover:bg-gray-700 transition duration-200">
+          <div key={task._id} className="border p-4 rounded shadow cursor-pointer hover:bg-gray-700 transition duration-200">
             <div className="flex justify-between items-center">
-              <div className="font-semibold">
+              <Link to={`/task/${task._id}`} className="font-semibold cursor-pointer text-lg">
                 {task.name}
-              </div>
+              </Link>
               <span
                 className={`px-2 py-1 rounded text-sm ${
                   task.status === "DONE"
@@ -132,7 +132,7 @@ const Task = () => {
                 Delete
               </button>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
 
