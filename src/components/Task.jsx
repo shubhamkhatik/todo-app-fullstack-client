@@ -21,7 +21,7 @@ const Task = () => {
   const fetchTasks = async () => {
     try {
       const res = await axios.get(BASE_URL + "/tasks", {
-        params: { search, status, Date ,page},
+        params: { search, status, Date, page },
         withCredentials: true,
       });
       dispatch(setTasks(res.data.tasks));
@@ -37,15 +37,19 @@ const Task = () => {
 
   const handleDelete = async (id) => {
     if (!confirm("Delete task?")) return;
-    await axios.delete(`${BASE_URL}/delete/${id}`,{withCredentials: true});
+    await axios.delete(`${BASE_URL}/delete/${id}`, { withCredentials: true });
     fetchTasks();
   };
 
   const toggleStatus = async (task) => {
-    await axios.put(`${BASE_URL}/update/${task._id}`, {
-      ...task,
-      status: task.status === "DONE" ? "PENDING" : "DONE",
-    },{withCredentials: true});
+    await axios.put(
+      `${BASE_URL}/update/${task._id}`,
+      {
+        ...task,
+        status: task.status === "DONE" ? "PENDING" : "DONE",
+      },
+      { withCredentials: true }
+    );
     fetchTasks();
   };
 
@@ -93,11 +97,15 @@ const Task = () => {
       {/* Task List */}
       <div className="grid gap-4">
         {task.map((task) => (
-          <div key={task._id} className="border p-4 rounded shadow cursor-pointer hover:bg-gray-700 transition duration-200">
+          <Link
+            to={`/task/${task._id}`}
+            key={task._id}
+            className="border p-4 rounded shadow cursor-pointer hover:bg-gray-700 transition duration-200"
+          >
             <div className="flex justify-between items-center">
-              <Link to={`/task/${task._id}`} className="font-semibold cursor-pointer text-lg">
+              <div className="font-semibold cursor-pointer text-lg">
                 {task.name}
-              </Link>
+              </div>
               <span
                 className={`px-2 py-1 rounded text-sm ${
                   task.status === "DONE"
@@ -111,13 +119,19 @@ const Task = () => {
             <p className="text-gray-600">{task.description}</p>
             <div className="flex gap-2 mt-2">
               <button
-                onClick={() => toggleStatus(task)}
-                className="text-blue-600 text-sm px-2 py-1 bg-green-100 text-green-800 rounded  "
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  toggleStatus(task);
+                }}
+                className="text-blue-600 text-sm px-2 py-1 bg-green-100  rounded  "
               >
                 change Status
               </button>
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
                   setEditTask(task);
                   setShowModal(true);
                 }}
@@ -126,13 +140,17 @@ const Task = () => {
                 Edit
               </button>
               <button
-                onClick={() => handleDelete(task._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  handleDelete(task._id);
+                }}
                 className="text-red-600 bg-green-100 px-2 py-1 text-sm"
               >
                 Delete
               </button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
