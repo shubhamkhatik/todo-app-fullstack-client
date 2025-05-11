@@ -14,14 +14,14 @@ const Task = () => {
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
-  const [Date, setDate] = useState("");
+  const [date, setDate] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchTasks = async () => {
     try {
       const res = await axios.get(BASE_URL + "/tasks", {
-        params: { search, status, Date, page },
+        params: { search, status, date, page },
         withCredentials: true,
       });
       dispatch(setTasks(res.data.tasks));
@@ -33,7 +33,7 @@ const Task = () => {
 
   useEffect(() => {
     fetchTasks();
-  }, [search, status, Date, page]);
+  }, [search, status, date, page]);
 
   const handleDelete = async (id) => {
     if (!confirm("Delete task?")) return;
@@ -88,7 +88,7 @@ const Task = () => {
         </select>
         <input
           type="date"
-          value={Date}
+          value={date}
           onChange={(e) => setDate(e.target.value)}
           className="p-2 border rounded"
         />
@@ -96,62 +96,66 @@ const Task = () => {
 
       {/* Task List */}
       <div className="grid gap-4">
-        {task.map((task) => (
-          <Link
-            to={`/task/${task._id}`}
-            key={task._id}
-            className="border p-4 rounded shadow cursor-pointer hover:bg-gray-700 transition duration-200"
-          >
-            <div className="flex justify-between items-center">
-              <div className="font-semibold cursor-pointer text-lg">
-                {task.name}
+        {task.length > 0 ? (
+          task.map((task) => (
+            <Link
+              to={`/task/${task._id}`}
+              key={task._id}
+              className="border p-4 rounded shadow cursor-pointer hover:bg-gray-700 transition duration-200"
+            >
+              <div className="flex justify-between items-center">
+                <div className="font-semibold cursor-pointer text-lg">
+                  {task.name}
+                </div>
+                <span
+                  className={`px-2 py-1 rounded text-sm ${
+                    task.status === "DONE"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-yellow-100 text-yellow-800"
+                  }`}
+                >
+                  {task.status}
+                </span>
               </div>
-              <span
-                className={`px-2 py-1 rounded text-sm ${
-                  task.status === "DONE"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-yellow-100 text-yellow-800"
-                }`}
-              >
-                {task.status}
-              </span>
-            </div>
-            <p className="text-gray-600">{task.description}</p>
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  toggleStatus(task);
-                }}
-                className="text-blue-600 text-sm px-2 py-1 bg-green-100  rounded  "
-              >
-                change Status
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  setEditTask(task);
-                  setShowModal(true);
-                }}
-                className="text-yellow-600 px-2 py-1 bg-green-100  text-sm "
-              >
-                Edit
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  handleDelete(task._id);
-                }}
-                className="text-red-600 bg-green-100 px-2 py-1 text-sm"
-              >
-                Delete
-              </button>
-            </div>
-          </Link>
-        ))}
+              <p className="text-gray-600">{task.description}</p>
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    toggleStatus(task);
+                  }}
+                  className="text-blue-600 text-sm px-2 py-1 bg-green-100 rounded"
+                >
+                  Change Status
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setEditTask(task);
+                    setShowModal(true);
+                  }}
+                  className="text-yellow-600 px-2 py-1 bg-green-100 text-sm"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleDelete(task._id);
+                  }}
+                  className="text-red-600 bg-green-100 px-2 py-1 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <div className="text-center text-gray-400">No tasks found</div>
+        )}
       </div>
 
       {/* Pagination */}
